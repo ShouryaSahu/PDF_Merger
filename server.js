@@ -17,15 +17,7 @@ app.post('/merge',upload.array('pdfs', 2), async (req, res, next) => {
     // res.send({data: req.files}) 
     res.redirect(`/static/merged_${d}.pdf`);
 })
-app.get('/about', (req, res) => {
-  res.send('About Us')
-})
-app.get('/contact', (req, res) => {
-  res.send('Contact Us')
-})
-app.get('/map', (req, res) => {
-  res.send('Map Us required')
-})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`)
