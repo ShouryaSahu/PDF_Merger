@@ -1,34 +1,382 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#6d5dfc">
   <title>PdfX — Merge PDFs in seconds</title>
   <style>
-    *{box-sizing:border-box} :root{--ink:#172033;--muted:#697386;--brand:#6d5dfc;--brand2:#8b5cf6;--line:#e7e9f2;--card:rgba(255,255,255,.86)}
-    body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 10%,#e8e5ff 0,transparent 30%),radial-gradient(circle at 85% 20%,#dff7ff 0,transparent 27%),linear-gradient(145deg,#f8f9ff,#f4fbff);}
-    .shell{width:min(1100px,calc(100% - 32px));margin:auto}.nav{height:78px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px}.logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 8px 24px #6d5dfc45}.pill{font-size:13px;color:#526071;background:#fff;border:1px solid var(--line);padding:8px 12px;border-radius:999px}
-    main{padding:54px 0 70px}.hero{text-align:center;max-width:780px;margin:0 auto 34px}.eyebrow{display:inline-flex;gap:7px;align-items:center;padding:7px 11px;border-radius:999px;background:#ffffffb8;border:1px solid #e5e3ff;color:#5c50d8;font-size:13px;font-weight:700}.hero h1{font-size:clamp(38px,6vw,66px);line-height:1.02;letter-spacing:-2.8px;margin:18px 0 16px}.gradient{background:linear-gradient(100deg,#5c50e8,#8b5cf6,#398bd8);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:18px;line-height:1.65;color:var(--muted);margin:0 auto;max-width:640px}
-    .card{max-width:760px;margin:auto;padding:18px;border:1px solid rgba(255,255,255,.9);background:var(--card);backdrop-filter:blur(16px);border-radius:28px;box-shadow:0 24px 70px rgba(56,64,112,.14)}.drop{position:relative;padding:46px 24px;border:2px dashed #cbc8f8;border-radius:20px;background:linear-gradient(180deg,#fbfaff,#f7f9ff);text-align:center;transition:.2s}.drop.drag{border-color:var(--brand);background:#f1efff;transform:scale(1.005)}.icon{width:68px;height:68px;margin:0 auto 18px;border-radius:20px;display:grid;place-items:center;background:#eceaff;color:var(--brand)}.drop h2{font-size:22px;margin:0 0 7px}.drop p{margin:0 0 20px;color:var(--muted);font-size:14px}.choose{display:inline-block;padding:12px 18px;border-radius:12px;background:var(--ink);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 8px 18px #17203324}.choose:hover{transform:translateY(-1px)}#pdfs{position:absolute;width:1px;height:1px;opacity:0}
-    .files{display:none;margin:16px 0 0;gap:10px}.files.show{display:grid}.file{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;text-align:left}.pdficon{width:38px;height:38px;flex:0 0 auto;border-radius:10px;display:grid;place-items:center;background:#fff0f0;color:#e05252;font-size:11px;font-weight:900}.file-info{min-width:0;flex:1}.file-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.file-size{color:#8a93a3;font-size:12px;margin-top:2px}.remove{border:0;background:#f5f6fa;color:#697386;width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:18px}.actions{padding-top:16px}.merge{width:100%;border:0;border-radius:14px;padding:15px 18px;color:#fff;font-size:16px;font-weight:800;cursor:pointer;background:linear-gradient(100deg,var(--brand),var(--brand2));box-shadow:0 12px 26px #6d5dfc40;transition:.2s}.merge:disabled{cursor:not-allowed;opacity:.45;box-shadow:none}.merge:not(:disabled):hover{transform:translateY(-1px)}.hint{text-align:center;color:#8a93a3;font-size:12px;margin:12px 0 0}
-    .features{max-width:760px;margin:22px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{padding:14px;text-align:center;color:#667085;font-size:13px}.feature strong{display:block;color:#344054;margin-bottom:3px}.feature span{font-size:18px;display:block;margin-bottom:5px}footer{text-align:center;padding:20px;color:#98a1b2;font-size:13px}
-    @media(max-width:640px){.nav{height:68px}.pill{display:none}main{padding-top:34px}.hero h1{letter-spacing:-1.8px}.hero p{font-size:16px}.card{padding:10px;border-radius:22px}.drop{padding:36px 16px}.features{grid-template-columns:1fr}.feature{padding:8px}}
+    * {
+      box-sizing: border-box
+    }
+
+    :root {
+      --ink: #172033;
+      --muted: #697386;
+      --brand: #6d5dfc;
+      --brand2: #8b5cf6;
+      --line: #e7e9f2;
+      --card: rgba(255, 255, 255, .86)
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at 15% 10%, #e8e5ff 0, transparent 30%), radial-gradient(circle at 85% 20%, #dff7ff 0, transparent 27%), linear-gradient(145deg, #f8f9ff, #f4fbff);
+    }
+
+    .shell {
+      width: min(1100px, calc(100% - 32px));
+      margin: auto
+    }
+
+    .nav {
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 22px
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 8px 24px #6d5dfc45
+    }
+
+    .pill {
+      font-size: 13px;
+      color: #526071;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      border-radius: 999px
+    }
+
+    main {
+      padding: 54px 0 70px
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 34px
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #ffffffb8;
+      border: 1px solid #e5e3ff;
+      color: #5c50d8;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 66px);
+      line-height: 1.02;
+      letter-spacing: -2.8px;
+      margin: 18px 0 16px
+    }
+
+    .gradient {
+      background: linear-gradient(100deg, #5c50e8, #8b5cf6, #398bd8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 640px
+    }
+
+    .card {
+      max-width: 760px;
+      margin: auto;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, .9);
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      box-shadow: 0 24px 70px rgba(56, 64, 112, .14)
+    }
+
+    .drop {
+      position: relative;
+      padding: 46px 24px;
+      border: 2px dashed #cbc8f8;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fbfaff, #f7f9ff);
+      text-align: center;
+      transition: .2s
+    }
+
+    .drop.drag {
+      border-color: var(--brand);
+      background: #f1efff;
+      transform: scale(1.005)
+    }
+
+    .icon {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 18px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: #eceaff;
+      color: var(--brand)
+    }
+
+    .drop h2 {
+      font-size: 22px;
+      margin: 0 0 7px
+    }
+
+    .drop p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .choose {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px #17203324
+    }
+
+    .choose:hover {
+      transform: translateY(-1px)
+    }
+
+    #pdfs {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0
+    }
+
+    .files {
+      display: none;
+      margin: 16px 0 0;
+      gap: 10px
+    }
+
+    .files.show {
+      display: grid
+    }
+
+    .file {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      text-align: left
+    }
+
+    .pdficon {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: #fff0f0;
+      color: #e05252;
+      font-size: 11px;
+      font-weight: 900
+    }
+
+    .file-info {
+      min-width: 0;
+      flex: 1
+    }
+
+    .file-name {
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .file-size {
+      color: #8a93a3;
+      font-size: 12px;
+      margin-top: 2px
+    }
+
+    .remove {
+      border: 0;
+      background: #f5f6fa;
+      color: #697386;
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 18px
+    }
+
+    .actions {
+      padding-top: 16px
+    }
+
+    .merge {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 18px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      background: linear-gradient(100deg, var(--brand), var(--brand2));
+      box-shadow: 0 12px 26px #6d5dfc40;
+      transition: .2s
+    }
+
+    .merge:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+      box-shadow: none
+    }
+
+    .merge:not(:disabled):hover {
+      transform: translateY(-1px)
+    }
+
+    .hint {
+      text-align: center;
+      color: #8a93a3;
+      font-size: 12px;
+      margin: 12px 0 0
+    }
+
+    .features {
+      max-width: 760px;
+      margin: 22px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px
+    }
+
+    .feature {
+      padding: 14px;
+      text-align: center;
+      color: #667085;
+      font-size: 13px
+    }
+
+    .feature strong {
+      display: block;
+      color: #344054;
+      margin-bottom: 3px
+    }
+
+    .feature span {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 5px
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #98a1b2;
+      font-size: 13px
+    }
+
+    @media(max-width:640px) {
+      .nav {
+        height: 68px
+      }
+
+      .pill {
+        display: none
+      }
+
+      main {
+        padding-top: 34px
+      }
+
+      .hero h1 {
+        letter-spacing: -1.8px
+      }
+
+      .hero p {
+        font-size: 16px
+      }
+
+      .card {
+        padding: 10px;
+        border-radius: 22px
+      }
+
+      .drop {
+        padding: 36px 16px
+      }
+
+      .features {
+        grid-template-columns: 1fr
+      }
+
+      .feature {
+        padding: 8px
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="shell">
-    <nav class="nav"><div class="brand"><span class="logo">P</span> PdfX</div><span class="pill">Simple • Fast • Private</span></nav>
+    <nav class="nav">
+      <div class="brand"><span class="logo">P</span> PdfX</div><span class="pill">Simple • Fast • Private</span>
+    </nav>
     <main>
       <section class="hero">
         <span class="eyebrow">✦ Free PDF utility</span>
         <h1>Bring your PDFs <span class="gradient">together.</span></h1>
-        <p>Combine two PDF files into one clean document in seconds. No complicated controls—just choose, merge, and download.</p>
+        <p>Combine two PDF files into one clean document in seconds. No complicated controls—just choose, merge, and
+          download.</p>
       </section>
       <form class="card" method="post" action="/merge" enctype="multipart/form-data" id="mergeForm">
         <div class="drop" id="dropZone">
           <div class="icon">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" />
+              <path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" />
+            </svg>
           </div>
           <h2>Drop your PDFs here</h2>
           <p>Select exactly two PDF files to merge.</p>
@@ -36,26 +384,67 @@
           <input type="file" name="pdfs" id="pdfs" multiple accept="application/pdf,.pdf">
           <div class="files" id="fileList"></div>
         </div>
-        <div class="actions"><button class="merge" id="mergeBtn" type="submit" disabled>Merge PDFs →</button><p class="hint" id="hint">Your files are processed only to create the merged PDF.</p></div>
+        <div class="actions"><button class="merge" id="mergeBtn" type="submit" disabled>Merge PDFs →</button>
+          <p class="hint" id="hint">Your files are processed only to create the merged PDF.</p>
+        </div>
       </form>
       <section class="features">
         <div class="feature"><span>⚡</span><strong>Quick</strong>Minimal steps from upload to result.</div>
         <div class="feature"><span>✨</span><strong>Simple</strong>A focused interface with no clutter.</div>
-        <div class="feature"><span>📄</span><strong>PDF ready</strong>Your merged file opens right after processing.</div>
+        <div class="feature"><span>📄</span><strong>PDF ready</strong>Your merged file opens right after processing.
+        </div>
       </section>
     </main>
     <footer>PdfX • A lightweight Node.js + Express PDF merger</footer>
   </div>
   <script>
-    const input=document.getElementById('pdfs'), list=document.getElementById('fileList'), btn=document.getElementById('mergeBtn'), zone=document.getElementById('dropZone'), form=document.getElementById('mergeForm'), hint=document.getElementById('hint');
-    let chosen=[];
-    const size=n=>n<1024*1024?`${Math.max(1,Math.round(n/1024))} KB`:`${(n/1024/1024).toFixed(1)} MB`;
-    function sync(){const dt=new DataTransfer();chosen.forEach(f=>dt.items.add(f));input.files=dt.files;render()}
-    function render(){list.innerHTML='';chosen.forEach((f,i)=>{const row=document.createElement('div');row.className='file';row.innerHTML=`<span class="pdficon">PDF</span><div class="file-info"><div class="file-name"></div><div class="file-size">${size(f.size)}</div></div><button class="remove" type="button" aria-label="Remove file">×</button>`;row.querySelector('.file-name').textContent=f.name;row.querySelector('.remove').onclick=()=>{chosen.splice(i,1);sync()};list.appendChild(row)});list.classList.toggle('show',chosen.length>0);btn.disabled=chosen.length!==2;hint.textContent=chosen.length===2?'Ready to merge your two PDFs.':chosen.length>2?'Please keep only two files.':'Your files are processed only to create the merged PDF.'}
-    function add(files){const pdfs=[...files].filter(f=>f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf'));chosen=[...chosen,...pdfs].slice(0,2);sync()}
-    input.addEventListener('change',e=>{chosen=[...e.target.files].slice(0,2);sync()});
-    ['dragenter','dragover'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.add('drag')}));['dragleave','drop'].forEach(ev=>zone.addEventListener(ev,e=>{e.preventDefault();zone.classList.remove('drag')}));zone.addEventListener('drop',e=>add(e.dataTransfer.files));
-    form.addEventListener('submit',()=>{btn.disabled=true;btn.textContent='Merging PDFs…';hint.textContent='Creating your merged document…'});
+    const input = document.getElementById('pdfs'), list = document.getElementById('fileList'), btn = document.getElementById('mergeBtn'), zone = document.getElementById('dropZone'), form = document.getElementById('mergeForm'), hint = document.getElementById('hint');
+    let chosen = [];
+    const size = n => n < 1024 * 1024 ? `${Math.max(1, Math.round(n / 1024))} KB` : `${(n / 1024 / 1024).toFixed(1)} MB`;
+    function sync() {
+       const dt = new DataTransfer();
+       chosen.forEach(f => dt.items.add(f));
+       input.files = dt.files;
+       render()
+    }
+
+    function render() { 
+      list.innerHTML = ''; 
+      chosen.forEach((f, i) => { 
+        const row = document.createElement('div'); 
+        row.className = 'file'; 
+        row.innerHTML = `<span class="pdficon">PDF</span><div class="file-info"><div class="file-name"></div><div class="file-size">${size(f.size)}</div></div><button class="remove" type="button" aria-label="Remove file">×</button>`; 
+        row.querySelector('.file-name').textContent = f.name; 
+        row.querySelector('.remove').onclick = () => { chosen.splice(i, 1); sync() }; 
+        list.appendChild(row) 
+      }); 
+      list.classList.toggle('show', chosen.length > 0); 
+      btn.disabled = chosen.length !== 2; 
+      hint.textContent = chosen.length === 2 ? 'Ready to merge your two PDFs.' : chosen.length > 2 ? 'Please keep only two files.' : 'Your files are processed only to create the merged PDF.' 
+    }
+
+    function add(files) { 
+      const pdfs = [...files].filter(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')); chosen = [...chosen, ...pdfs].slice(0, 2); sync() 
+    }
+
+    input.addEventListener('change', e => {
+       chosen = [...e.target.files].slice(0, 2); sync() 
+    });
+
+
+    ['dragenter', 'dragover'].forEach(ev => zone.addEventListener(ev, e => {
+       e.preventDefault(); zone.classList.add('drag')
+     }));
+
+
+    ['dragleave', 'drop'].forEach(ev => zone.addEventListener(ev, e => {
+      e.preventDefault(); zone.classList.remove('drag')
+    }));
+    zone.addEventListener('drop', e => add(e.dataTransfer.files));
+    form.addEventListener('submit', () => {
+      btn.disabled = true; btn.textContent = 'Merging PDFs…'; hint.textContent = 'Creating your merged document…'
+    });
   </script>
 </body>
+
 </html>
