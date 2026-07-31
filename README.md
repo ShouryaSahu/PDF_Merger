@@ -73,7 +73,7 @@ Contains the PdfX frontend, including the responsive design, drag-and-drop uploa
 
 ```bash
 git clone <your-repository-url>
-cd PDF_Tools
+cd PDF_Merger
 ```
 
 ### 2. Install dependencies
